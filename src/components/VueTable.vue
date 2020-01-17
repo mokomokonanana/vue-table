@@ -36,9 +36,6 @@ export default {
       }
     }
   },
-  data:function(){return{
-    _columns: JSON.parse(JSON.stringify(this.columns))
-  }},
   computed:{
     // slot名
     slotName: function(){ return (c, r) =>{
@@ -56,7 +53,6 @@ export default {
   },
   mounted(){
     // 横サイズ調整
-    console.warn(this._columns)
     this.columns.forEach((col, index)=>{
       const nodes = this.$el.querySelectorAll(`.vue-table > div > div:nth-child(${index + 1})`)
       nodes.forEach(node =>{
