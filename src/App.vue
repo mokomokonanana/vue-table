@@ -35,8 +35,16 @@ export default {
     ],
     columns: [
       {label: 'index'},
-      {label: 'No' , field: 'No'},
-      {label: '名前' , field: 'name'}
+      {label: ['test', 'No'] , field: 'No'},
+      {label: ['グループ', 'No'] , field: 'No'},
+      {label: ['グループ', '名前'] , field: 'name'},
+      {label: ['グループ', 'bbb', 'aaa'] , field: 'name'},
+      {label: ['グループ', 'bbb', 'ccc'] , field: 'name'},
+      {label: ['グループ', 'bbb', 'ddd'] , field: 'name'},
+      {label: ['a', 'b', 'c', 'd'] , field: 'name'},
+      {label: 'グループ' , field: 'No'},
+      {label: ['グループあああああああああああああ', 'No'] , field: 'No'},
+      {label: ['グループあああああああああああああ', '名前'] , field: 'name'},
     ]
   }}
 }

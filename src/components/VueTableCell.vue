@@ -1,14 +1,12 @@
 <template lang="pug">
-  .vue-table-cell(:style="style")
+  .col(:style="style")
     slot
       template(v-if="row && field") {{ row[field] }}
-      template(v-else) {{ label }}
 </template>
 
 <script>
 export default {
   props:{
-    label: String,
     field: String,
     width: Number,
     row: Object
@@ -20,12 +18,12 @@ export default {
       return style
     }
   },
-  mounted(){
-    console.warn('mounted')
-  },
-  updated(){
-    console.warn('updated')
-  },
+  // mounted(){
+  //   console.warn('mounted')
+  // },
+  // updated(){
+  //   console.warn('updated')
+  // },
   methods:{
   }
 }

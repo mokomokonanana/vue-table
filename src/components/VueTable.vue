@@ -1,7 +1,6 @@
 <template lang="pug">
   .vue-table
-    div
-      VueTableCell(v-for="(col, index) in columns" :key="index" v-bind="col")
+    VueTableHeader(:columns="columns")
     div(v-for="(row, r) in list" :class="{select: row.selected}" @click="rowClick(row, r)")
       template(v-for="(col, c) in columns")
         slot(:name="slotName(c, r)" :col="col" :r="r")
@@ -11,6 +10,7 @@
 
 <script>
 import VueTableCell from '@/components/VueTableCell.vue'
+import VueTableHeader from '@/components/VueTableHeader.vue'
 
 export const VueTableSelectMode = {
   none : 0,
@@ -24,7 +24,7 @@ export function VueTableSlotName(c, r){
   return name
 }
 export default {
-  components:{ VueTableCell },
+  components:{ VueTableCell, VueTableHeader },
   props:{
     columns: Array,
     list: Array,
@@ -49,16 +49,34 @@ export default {
       const style = {}
       if(col.width) style.width = `${col.width}px`
       return style
-    }}
+    }},
+    headerRowCount:function(){
+      return this.columns.reduce((result, current)=>{
+        const type = Object.prototype.toString.call(current.label).slice(8, -1).toLowerCase()
+        if(type == 'string'){
+          if(result < 1) result = 1
+        }
+        if(type == 'array'){
+          if(result < current.label.length) result = current.label.length
+        }
+        return result
+      }, 0)
+    },
   },
   mounted(){
     // 横サイズ調整
     this.columns.forEach((col, index)=>{
-      const nodes = this.$el.querySelectorAll(`.vue-table > div > div:nth-child(${index + 1})`)
+      // header
+      const node = this.$el.querySelectorAll(`.vue-table > .header .col.last`)[index]
+      if(!col.width || col.width > node.clientWidth) col.width =  node.clientWidth
+
+      // body
+      const nodes = this.$el.querySelectorAll(`.vue-table > div:nth-child(n + 2) > div:nth-child(${index + 1})`)
       nodes.forEach(node =>{
         if(col.width && col.width > node.clientWidth) return
         col.width =  node.clientWidth
       })
+      this.$set(this.columns, index, col)
     })
     // 定義に変更があったらにしたい
     this.$forceUpdate()
@@ -97,22 +115,24 @@ export default {
 .vue-table
   display inline-block
   overflow auto
-  border 1px solid red
+  border 1px solid black
   > div
     display flex
     &.select
       background-color #d5ead8
-    &:not(:last-child)
-      border-bottom 1px solid black
-    > div
-      // border 1px solid black
-      // margin-top -1px
-      // margin-left -1px
-      display flex
-      justify-content center
-      align-items center
-      flex-shrink 0
-      padding 0.2rem
-      &:not(:last-child)
-        border-right 1px solid black
+  >>> .col
+    display flex
+    align-items center
+    justify-content center
+    line-height 1.5rem
+    padding 0.1rem 0.5rem
+    border-color black
+    border-style solid
+    border-width 0px
+  >>> > div:not(:last-child) .col
+    border-bottom-width 1px
+  >>> .col:not(:first-child),
+  >>> > .header > :not(:first-child) .col
+  >>> > .header > :first-child > .row > :not(:first-child) .col
+    border-left-width 1px
 </style>
