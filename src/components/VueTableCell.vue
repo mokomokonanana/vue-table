@@ -18,14 +18,6 @@ export default {
       return style
     }
   },
-  // mounted(){
-  //   console.warn('mounted')
-  // },
-  // updated(){
-  //   console.warn('updated')
-  // },
-  methods:{
-  }
 }
 </script>
 
