@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vue-table
+  .vue-table(@scroll="scroll" @wheel="wheel")
     VueTableHeader(:columns="columns")
     div(v-for="(row, r) in list" :class="{select: row.selected}" @click="rowClick(row, r)")
       template(v-for="(col, c) in columns")
@@ -106,6 +106,28 @@ export default {
       // 行選択
       row.selected = true
       this.$set(this.list, r, row)
+    },
+    // IEの場合ヘッダ固定スクロールがガタつくのを防止
+    wheel(event){
+      if(this.isIE()) return
+      event.preventDefault()
+      this.$el.scrollTop += event.deltaY
+    },
+    scroll(){
+      this.stickyTop()
+    },
+    // ヘッダ固定
+    stickyTop(){
+      if(this.isIE()) return
+      this.$el.firstChild.style.position = 'relative'
+      this.$el.firstChild.style.top = `${this.$el.scrollTop}px`
+    },
+    // IE判定
+    isIE(){
+      var ua = window.navigator.userAgent.toLowerCase()
+      if (ua.indexOf("msie") != -1) return false
+      if (ua.indexOf('trident/7') != -1) return false
+      return true
     }
   }
 }
@@ -116,6 +138,9 @@ export default {
   display inline-block
   overflow auto
   border 1px solid black
+  >>> > .header
+    position sticky
+    top 0
   > div
     display flex
     // 行選択色

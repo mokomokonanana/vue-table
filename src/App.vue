@@ -1,6 +1,6 @@
 <template lang="pug">
   #app
-    VueTable(:columns="columns" :list="list" :selectMode="selectMode")
+    VueTable(:columns="columns" :list="list" :selectMode="selectMode" style="width:300px;height:300px;")
       //- 〇行〇列の出力内容変更
       template(v-for="(item, index) in list" #[`body-r${index}c0`]="{col, r}")
         VueTableCell(v-if="r < 5" v-bind="col" :style="{color:'red'}") {{ r }}
