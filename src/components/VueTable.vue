@@ -118,21 +118,31 @@ export default {
   border 1px solid black
   > div
     display flex
+    // 行選択色
     &.select
       background-color #d5ead8
+  // カラム（headerもbodyも共通の設定）
   >>> .col
     display flex
     align-items center
     justify-content center
+    flex 1 0 auto
     line-height 1.5rem
     padding 0.1rem 0.5rem
     border-color black
     border-style solid
-    border-width 0px
-  >>> > div:not(:last-child) .col
-    border-bottom-width 1px
-  >>> .col:not(:first-child),
-  >>> > .header > :not(:first-child) .col
-  >>> > .header > :first-child > .row > :not(:first-child) .col
-    border-left-width 1px
+    border-width 1px
+    border-right 0px
+    border-top 0px
+  // header背景色
+  >>> .header .col
+    background-color lightgrey
+  // // カラムの区切り線
+  >>> > div:last-child .col
+    border-bottom-width 0px
+  >>> > div > .col:first-child
+  >>> > .header > :not(:nth-child(n + 2)) > .col
+  >>> > .header > :not(:nth-child(n + 2)) > .row > .col:first-child
+  >>> > .header > :not(:nth-child(n + 2)) > .row :not(:nth-child(n + 2)) .col:first-child
+    border-left-width 0px
 </style>

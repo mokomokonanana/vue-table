@@ -41,6 +41,8 @@ export default {
       {label: ['グループ', 'bbb', 'aaa'] , field: 'name'},
       {label: ['グループ', 'bbb', 'ccc'] , field: 'name'},
       {label: ['グループ', 'bbb', 'ddd'] , field: 'name'},
+      {label: ['グループ', 'No'] , field: 'No'},
+      {label: ['グループ', '名前'] , field: 'name'},
       {label: ['a', 'b', 'c', 'd'] , field: 'name'},
       {label: 'グループ' , field: 'No'},
       {label: ['グループあああああああああああああ', 'No'] , field: 'No'},
@@ -49,7 +51,10 @@ export default {
   }}
 }
 </script>
-
+<style lang="stylus" scoped>
+#app .vue-table >>> .col
+  border-color red
+</style>
 <style lang="stylus">
 #app
   font-family 'Avenir', Helvetica, Arial, sans-serif
