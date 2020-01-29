@@ -1,10 +1,10 @@
 <template lang="pug">
   .vue-table(@scroll="scroll" @wheel="wheel")
-    VueTableHeader(:columns="columns")
+    VueTableHeader(:columns="columns" :leftSticky="leftSticky")
     div(v-for="(row, r) in list" :class="{select: row.selected}" @click="rowClick(row, r)")
       template(v-for="(col, c) in columns")
         slot(:name="slotName(c, r)" :col="col" :r="r")
-          slot(:name="slotName(c)" :col="col" :r="r" )
+          slot(:name="slotName(c)" :col="col" :r="r")
             VueTableCell(v-bind="col" :row="row")
 </template>
 
@@ -34,6 +34,10 @@ export default {
       validator: function (value) {
         return Object.values(VueTableSelectMode).indexOf(value) !== -1
       }
+    },
+    leftSticky: {
+      type: Number,
+      default: 0
     }
   },
   computed:{
@@ -44,24 +48,6 @@ export default {
       if(c != undefined) name += `c${c}`
       return name
     }},
-    // スタイル調整
-    colStyle: function(){return (col)=>{
-      const style = {}
-      if(col.width) style.width = `${col.width}px`
-      return style
-    }},
-    headerRowCount:function(){
-      return this.columns.reduce((result, current)=>{
-        const type = Object.prototype.toString.call(current.label).slice(8, -1).toLowerCase()
-        if(type == 'string'){
-          if(result < 1) result = 1
-        }
-        if(type == 'array'){
-          if(result < current.label.length) result = current.label.length
-        }
-        return result
-      }, 0)
-    },
   },
   mounted(){
     // 横サイズ調整
@@ -109,25 +95,35 @@ export default {
     },
     // IEの場合ヘッダ固定スクロールがガタつくのを防止
     wheel(event){
-      if(this.isIE()) return
+      if(!this.isIE()) return
       event.preventDefault()
       this.$el.scrollTop += event.deltaY
     },
     scroll(){
       this.stickyTop()
+      this.stickyLeft()
     },
     // ヘッダ固定
     stickyTop(){
-      if(this.isIE()) return
+      if(!this.isIE()) return
       this.$el.firstChild.style.position = 'relative'
       this.$el.firstChild.style.top = `${this.$el.scrollTop}px`
+    },
+    stickyLeft(){
+      if(this.leftSticky < 1) return
+      if(!this.columns) return
+      if(this.columns.length < 1) return
+      for(let i = 0;  i < this.leftSticky;  i++) {
+        this.columns[i].stickyLeft = this.$el.scrollLeft
+        this.$set(this.columns, i , this.columns[i])
+      }
     },
     // IE判定
     isIE(){
       var ua = window.navigator.userAgent.toLowerCase()
-      if (ua.indexOf("msie") != -1) return false
-      if (ua.indexOf('trident/7') != -1) return false
-      return true
+      if (ua.indexOf("msie") != -1) return true
+      if (ua.indexOf('trident/7') != -1) return true
+      return false
     }
   }
 }
@@ -157,17 +153,18 @@ export default {
     border-color black
     border-style solid
     border-width 1px
-    border-right 0px
+    border-left 0px
     border-top 0px
+    background-color white
   // header背景色
   >>> .header .col
     background-color lightgrey
   // // カラムの区切り線
   >>> > div:last-child .col
     border-bottom-width 0px
-  >>> > div > .col:first-child
-  >>> > .header > :not(:nth-child(n + 2)) > .col
-  >>> > .header > :not(:nth-child(n + 2)) > .row > .col:first-child
-  >>> > .header > :not(:nth-child(n + 2)) > .row :not(:nth-child(n + 2)) .col:first-child
-    border-left-width 0px
+  >>> > div > .col:last-child
+  >>> > .header > :last-child > .col
+  >>> > .header > :last-child > .row > .col:last-child
+  >>> > .header > :last-child > .row :last-child .col:last-child
+    border-right-width 0px
 </style>

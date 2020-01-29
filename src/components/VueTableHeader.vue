@@ -10,7 +10,8 @@ import VueTableHeaderCol from '@/components/VueTableHeaderCol.vue'
 export default {
   components:{ VueTableHeaderCol },
   props:{
-    columns: Array
+    columns: Array,
+    leftSticky: Number,
   },
   computed:{
     header: function(){
@@ -18,6 +19,7 @@ export default {
         // 単段ヘッダ追加
         if(!Array.isArray(current.label)){
           result.push(this.createColumn(current))
+          if(current.stickyLeft) result[result.length - 1].stickyLeft = current.stickyLeft
           return result
         }
 
@@ -25,9 +27,11 @@ export default {
         //  一件目 || 前列が単段
         if(result.length < 1 || !result[result.length - 1].child){
           result.push(this.createColumns(current, 0))
+          if(current.stickyLeft) result[result.length - 1].stickyLeft = current.stickyLeft
           return result
         }
         this.mergeColumns(current, 0, result)
+        if(current.stickyLeft) result[result.length - 1].stickyLeft = current.stickyLeft
         return result
       }, [])
     }

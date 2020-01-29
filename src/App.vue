@@ -1,6 +1,6 @@
 <template lang="pug">
   #app
-    VueTable(:columns="columns" :list="list" :selectMode="selectMode" style="width:300px;height:300px;")
+    VueTable(:columns="columns" :list="list" :selectMode="selectMode" style="width:300px;height:300px;" :leftSticky="2")
       //- 〇行〇列の出力内容変更
       template(v-for="(item, index) in list" #[`body-r${index}c0`]="{col, r}")
         VueTableCell(v-if="r < 5" v-bind="col" :style="{color:'red'}") {{ r }}
@@ -51,10 +51,12 @@ export default {
   }}
 }
 </script>
+
 <style lang="stylus" scoped>
 #app .vue-table >>> .col
   border-color red
 </style>
+
 <style lang="stylus">
 #app
   font-family 'Avenir', Helvetica, Arial, sans-serif
